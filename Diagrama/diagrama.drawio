@@ -1,0 +1,255 @@
+<mxfile host="app.diagrams.net" version="21.0.0" type="device">
+  <diagram id="diagrama_atualizado_sql" name="Diagrama de Classes Atualizado">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Autor (Tabela autores do banco) -->
+        <mxCell id="autor" value="Autor&#xa;&lt;hr&gt;- id: int&#xa;- nome: String" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="20" y="220" width="120" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- AutorLivro (Tabela autor_livro N:N) -->
+        <mxCell id="autor_livro" value="AutorLivro&#xa;&lt;hr&gt;- id: int&#xa;- autorId: int&#xa;- livroId: int" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="160" y="220" width="110" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Genero -->
+        <mxCell id="genero" value="Genero&#xa;&lt;hr&gt;- id: int&#xa;- nome: String" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Livro (autor: String removido conforme SQL) -->
+        <mxCell id="livro" value="Livro&#xa;&lt;hr&gt;- id: int&#xa;- titulo: String&#xa;- preco: double&#xa;- estoque: int&#xa;- genero: Genero&#xa;- capa: String&#xa;&lt;hr&gt;+ getPreco(): double&#xa;+ getTitulo(): String&#xa;+ getEstoqueDisponivel(): int" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="180" height="180" as="geometry" />
+        </mxCell>
+
+        <!-- KitDeLivros -->
+        <mxCell id="kit_livros" value="KitDeLivros&#xa;&lt;hr&gt;- id: int&#xa;- titulo: String&#xa;- itens: List&#xa;- descontoPercentual: double&#xa;&lt;hr&gt;+ adicionar(item: ItemCatalogo)&#xa;+ remover(item: ItemCatalogo)&#xa;+ getPreco(): double&#xa;+ getTitulo(): String&#xa;+ getEstoqueDisponivel(): int" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="180" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- Interface ItemCatalogo (Composite) -->
+        <mxCell id="item_catalogo" value="«interface»&#xa;&lt;b&gt;ItemCatalogo&lt;/b&gt;&#xa;&lt;hr&gt;+ getPreco(): double&#xa;+ getTitulo(): String&#xa;+ getEstoqueDisponivel(): int" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="310" y="40" width="170" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- ItemPedido -->
+        <mxCell id="item_pedido" value="ItemPedido&#xa;&lt;hr&gt;- item: ItemCatalogo&#xa;- quantidade: int&#xa;- precoUnitario: double&#xa;&lt;hr&gt;+ getSubtotal(): double" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="310" y="250" width="170" height="110" as="geometry" />
+        </mxCell>
+
+        <!-- Pedido -->
+        <mxCell id="pedido" value="Pedido&#xa;&lt;hr&gt;- id: int&#xa;- itens: List&#xa;- estado: EstadoPedido&#xa;- total: double&#xa;- criadoEm: DateTime&#xa;- observadores: List&#xa;- estrategiaPagamento: EstrategiaPagamento&#xa;&lt;hr&gt;+ adicionarObservador(o)&#xa;+ removerObservador(o)&#xa;+ notificarObservadores()&#xa;+ definirEstrategiaPagamento(e)&#xa;+ transicionarPara(estado: EstadoPedido)&#xa;+ podeAdicionarItem(item): boolean&#xa;+ finalizarPedido(): boolean&#xa;+ cancelarPedido(): boolean" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="540" y="150" width="260" height="270" as="geometry" />
+        </mxCell>
+
+        <!-- Interface Observador -->
+        <mxCell id="observador" value="«interface»&#xa;&lt;b&gt;Observador&lt;/b&gt;&#xa;&lt;hr&gt;+ atualizar(pedido: Pedido)" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="880" y="40" width="180" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Cliente -->
+        <mxCell id="cliente" value="Cliente&#xa;&lt;hr&gt;- id: int&#xa;- nome: String&#xa;- email: String&#xa;- senhaHash: String&#xa;- criadoEm: DateTime&#xa;&lt;hr&gt;+ atualizar(pedido: Pedido)" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="880" y="220" width="180" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- Interface EstadoPedido (State) -->
+        <mxCell id="estado_pedido" value="«interface»&#xa;&lt;b&gt;EstadoPedido&lt;/b&gt;&#xa;&lt;hr&gt;+ nome(): String&#xa;+ adicionarItem(pedido, item): boolean&#xa;+ finalizar(pedido): boolean&#xa;+ cancelar(pedido): boolean" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="170" width="220" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Estados Concretos -->
+        <mxCell id="estado_aberto" value="EstadoAberto&#xa;&lt;hr&gt;+ finalizar(pedido): tenta pagamento (Strategy)&#xa;+ cancelar(pedido): esvazia o carrinho" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="310" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="estado_confirmado" value="EstadoConfirmado&#xa;&lt;hr&gt;+ adicionarItem(pedido): bloqueado&#xa;+ cancelar(pedido): permitido (até enviar)" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="410" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="estado_falhou" value="EstadoFalhou&#xa;&lt;hr&gt;+ finalizar(pedido): tenta novamente&#xa;+ adicionarItem(pedido): permitido" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="510" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="estado_cancelado" value="EstadoCancelado&#xa;&lt;hr&gt;+ estado terminal&#xa;+ todas as ações são bloqueadas" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="610" width="260" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Interface EstrategiaPagamento (Strategy) -->
+        <mxCell id="estrategia_pagamento" value="«interface»&#xa;&lt;b&gt;EstrategiaPagamento&lt;/b&gt;&#xa;&lt;hr&gt;+ processar(valor: double): boolean&#xa;+ getCodigo(): String" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="560" y="480" width="220" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Formas de Pagamento Concretas -->
+        <mxCell id="pag_cartao" value="PagamentoCartao&#xa;&lt;hr&gt;- codigo: String = &quot;cartao&quot;&#xa;- nome: String = &quot;Cartão de Crédito&quot;&#xa;&lt;hr&gt;+ processar(valor): boolean" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="380" y="650" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pag_boleto" value="PagamentoBoleto&#xa;&lt;hr&gt;- codigo: String = &quot;boleto&quot;&#xa;- nome: String = &quot;Boleto Bancário&quot;&#xa;&lt;hr&gt;+ processar(valor): boolean" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="590" y="650" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pag_pix" value="PagamentoPix&#xa;&lt;hr&gt;- codigo: String = &quot;pix&quot;&#xa;- nome: String = &quot;Pix&quot;&#xa;&lt;hr&gt;+ processar(valor): boolean" style="shape=rect;html=1;whiteSpace=wrap;align=left;verticalAlign=top;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="800" y="650" width="200" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- RELACIONAMENTOS -->
+
+        <!-- Genero 1 -> N Livro -->
+        <mxCell id="rel_genero_livro" edge="1" parent="1" source="livro" target="genero" style="endArrow=open;endFill=0;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Autor N:N Livro via AutorLivro -->
+        <mxCell id="rel_autor_al" edge="1" parent="1" source="autor" target="autor_livro" style="endArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_al_livro" edge="1" parent="1" source="autor_livro" target="livro" style="endArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Livro & Kit -> ItemCatalogo (Interface) -->
+        <mxCell id="rel_livro_cat" edge="1" parent="1" source="livro" target="item_catalogo" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="430" />
+              <mxPoint x="250" y="85" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="rel_kit_cat" edge="1" parent="1" source="kit_livros" target="item_catalogo" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="640" />
+              <mxPoint x="270" y="85" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="rel_kit_contem" edge="1" parent="1" source="kit_livros" target="item_catalogo" style="endArrow=open;endFill=0;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="230" y="600" />
+              <mxPoint x="230" y="110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ItemPedido refere-se a ItemCatalogo -->
+        <mxCell id="rel_itemped_cat" edge="1" parent="1" source="item_pedido" target="item_catalogo" style="endArrow=open;endFill=0;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_refere" value="refere-se a" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="rel_itemped_cat">
+          <mxGeometry x="0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Pedido compoe ItemPedido -->
+        <mxCell id="rel_pedido_item" edge="1" parent="1" source="pedido" target="item_pedido" style="endArrow=open;endFill=0;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_compoe" value="compoe" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="rel_pedido_item">
+          <mxGeometry x="0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Pedido notifica Observador -->
+        <mxCell id="rel_pedido_obs" edge="1" parent="1" source="pedido" target="observador" style="endArrow=open;endFill=0;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="800" y="75" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl_notifica" value="notifica" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="rel_pedido_obs">
+          <mxGeometry x="-0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Cliente pertence a Pedido e implementa Observador -->
+        <mxCell id="rel_pedido_cliente" edge="1" parent="1" source="pedido" target="cliente" style="endArrow=open;endFill=0;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_pertence" value="pertence a" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="rel_pedido_cliente">
+          <mxGeometry x="0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <mxCell id="rel_cliente_obs" edge="1" parent="1" source="cliente" target="observador" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Pedido tem estado EstadoPedido -->
+        <mxCell id="rel_pedido_estado" edge="1" parent="1" source="pedido" target="estado_pedido" style="endArrow=open;endFill=0;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_tem_estado" value="tem estado" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="rel_pedido_estado">
+          <mxGeometry x="0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Implementações de EstadoPedido -->
+        <mxCell id="rel_aberto_state" edge="1" parent="1" source="estado_aberto" target="estado_pedido" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1400" y="345" />
+              <mxPoint x="1400" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_conf_state" edge="1" parent="1" source="estado_confirmado" target="estado_pedido" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1400" y="445" />
+              <mxPoint x="1400" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_falhou_state" edge="1" parent="1" source="estado_falhou" target="estado_pedido" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1400" y="545" />
+              <mxPoint x="1400" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_canc_state" edge="1" parent="1" source="estado_cancelado" target="estado_pedido" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1400" y="645" />
+              <mxPoint x="1400" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Pedido usa EstrategiaPagamento -->
+        <mxCell id="rel_pedido_est" edge="1" parent="1" source="pedido" target="estrategia_pagamento" style="endArrow=open;endFill=0;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl_usa" value="usa" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" connectable="0" vertex="1" parent="rel_pedido_est">
+          <mxGeometry x="0.1" relative="1" as="geometry"><mxPoint as="offset" /></mxGeometry>
+        </mxCell>
+
+        <!-- Implementações de EstrategiaPagamento -->
+        <mxCell id="rel_cartao" edge="1" parent="1" source="pag_cartao" target="estrategia_pagamento" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="600" />
+              <mxPoint x="670" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rel_boleto" edge="1" parent="1" source="pag_boleto" target="estrategia_pagamento" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rel_pix" edge="1" parent="1" source="pag_pix" target="estrategia_pagamento" style="endArrow=block;endSize=12;endFill=0;dashed=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="900" y="600" />
+              <mxPoint x="670" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
