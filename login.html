@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — Epílogo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wood-dark:#241712; --wood:#3b241a; --leather:#7a2e22;
+    --brass:#b9924a; --brass-bright:#d9b774;
+    --paper:#efe3c8; --paper-bright:#f6ecd6;
+    --ink:#2a1d14; --ink-soft:#4b3a2a; --forest:#2f4a37;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(ellipse at 50% -10%, rgba(217,183,116,.12), transparent 55%),
+               linear-gradient(180deg, #180f0b 0%, #241712 55%, #1a100c 100%);
+    font-family:'EB Garamond', serif; color:var(--ink); padding:24px;
+  }
+  h1,.display{font-family:'Cormorant Garamond', serif; font-weight:700;}
+  .eyebrow{
+    font-family:'IM Fell English SC', serif; letter-spacing:.18em; text-transform:uppercase;
+    font-size:.72rem; color:var(--brass-bright);
+  }
+  .card{
+    background:var(--paper-bright); border-radius:6px; padding:40px 36px;
+    width:100%; max-width:400px; box-shadow:0 20px 50px rgba(0,0,0,.5);
+  }
+  .card > a.brand{text-decoration:none; display:block; text-align:center; margin-bottom:26px;}
+  .brand-mark{
+    width:44px;height:44px; border:1.5px solid var(--brass); border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-family:'IM Fell English SC'; font-size:1.25rem; color:var(--wood);
+    background:radial-gradient(circle at 30% 30%, var(--paper), #ded1b0);
+  }
+  h1{font-size:1.7rem; color:var(--wood); margin:16px 0 4px; text-align:center;}
+  .sub{color:var(--ink-soft); font-size:.95rem; text-align:center; margin:0 0 26px;}
+
+  .tabs{display:flex; border-bottom:1px solid rgba(42,29,20,.18); margin-bottom:24px;}
+  .tab{
+    flex:1; text-align:center; padding:10px 0; cursor:pointer; background:none; border:none;
+    font-family:'IM Fell English SC'; letter-spacing:.08em; text-transform:uppercase; font-size:.8rem;
+    color:var(--ink-soft); border-bottom:2px solid transparent; margin-bottom:-1px; transition:.2s;
+  }
+  .tab.active{color:var(--wood); border-color:var(--leather);}
+
+  form{display:none; flex-direction:column; gap:14px;}
+  form.active{display:flex;}
+  label{font-size:.85rem; color:var(--ink-soft); margin-bottom:4px; display:block;}
+  input{
+    width:100%; padding:11px 12px; border:1px solid rgba(42,29,20,.25); border-radius:3px;
+    font-family:'EB Garamond'; font-size:1rem; background:var(--paper); color:var(--ink);
+  }
+  input:focus{outline:none; border-color:var(--leather);}
+  .btn{
+    margin-top:6px; background:var(--leather); color:var(--paper-bright); border:none; padding:13px;
+    font-family:'Cormorant Garamond'; font-weight:700; font-size:1.1rem; border-radius:3px; cursor:pointer; transition:.2s;
+  }
+  .btn:hover{background:#8f382a;}
+  .btn:disabled{background:#b7a98d; cursor:not-allowed;}
+  .msg{font-size:.88rem; padding:10px 12px; border-radius:3px; display:none;}
+  .msg.erro{display:block; background:#f4dcd6; color:#7a2e22; border:1px solid #c98a7a;}
+  .msg.ok{display:block; background:#dfe9e0; color:#2f4a37; border:1px solid #8fae95;}
+  .voltar{display:block; text-align:center; margin-top:20px; font-size:.85rem; color:var(--ink-soft); text-decoration:none;}
+  .voltar:hover{color:var(--leather);}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <a class="brand" href="epilogo.html">
+    <span class="brand-mark">Ep</span>
+    <h1>Epílogo</h1>
+    <p class="sub">Entre com sua conta ou crie uma nova</p>
+  </a>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="login">Entrar</button>
+    <button class="tab" data-tab="cadastro">Criar conta</button>
+  </div>
+
+  <div class="msg" id="msg"></div>
+
+  <form id="formLogin" class="active">
+    <div>
+      <label for="loginEmail">E-mail</label>
+      <input id="loginEmail" type="email" required autocomplete="email">
+    </div>
+    <div>
+      <label for="loginSenha">Senha</label>
+      <input id="loginSenha" type="password" required autocomplete="current-password">
+    </div>
+    <button class="btn" type="submit">Entrar</button>
+  </form>
+
+  <form id="formCadastro">
+    <div>
+      <label for="cadNome">Nome</label>
+      <input id="cadNome" type="text" required autocomplete="name">
+    </div>
+    <div>
+      <label for="cadEmail">E-mail</label>
+      <input id="cadEmail" type="email" required autocomplete="email">
+    </div>
+    <div>
+      <label for="cadSenha">Senha</label>
+      <input id="cadSenha" type="password" required minlength="6" autocomplete="new-password">
+    </div>
+    <button class="btn" type="submit">Criar conta</button>
+  </form>
+
+  <a class="voltar" href="epilogo.html">&larr; Voltar pro acervo</a>
+</div>
+
+<script>
+const tabs = document.querySelectorAll(".tab");
+const forms = { login: document.getElementById("formLogin"), cadastro: document.getElementById("formCadastro") };
+const msgEl = document.getElementById("msg");
+
+tabs.forEach(tab=>{
+  tab.addEventListener("click", ()=>{
+    tabs.forEach(t=>t.classList.remove("active"));
+    tab.classList.add("active");
+    Object.values(forms).forEach(f=>f.classList.remove("active"));
+    forms[tab.dataset.tab].classList.add("active");
+    msgEl.className = "msg";
+  });
+});
+
+function mostrarMsg(texto, tipo){
+  msgEl.textContent = texto;
+  msgEl.className = "msg " + tipo;
+}
+
+async function enviar(url, dados, btn){
+  btn.disabled = true;
+  try{
+    const resp = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados),
+    });
+    const json = await resp.json();
+    if (!resp.ok || !json.sucesso) throw new Error(json.erro || "Algo deu errado.");
+    mostrarMsg(`Bem-vinda, ${json.cliente.nome}. Redirecionando...`, "ok");
+    setTimeout(()=> window.location.href = "epilogo.html", 700);
+  } catch(err){
+    mostrarMsg(err.message, "erro");
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById("formLogin").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  enviar("api/login.php", {
+    email: document.getElementById("loginEmail").value.trim(),
+    senha: document.getElementById("loginSenha").value,
+  }, e.submitter || e.target.querySelector("button"));
+});
+
+document.getElementById("formCadastro").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  enviar("api/cadastrar.php", {
+    nome: document.getElementById("cadNome").value.trim(),
+    email: document.getElementById("cadEmail").value.trim(),
+    senha: document.getElementById("cadSenha").value,
+  }, e.submitter || e.target.querySelector("button"));
+});
+
+// se já está logada, nem mostra a tela — manda direto pro acervo
+fetch("api/sessao.php").then(r=>r.json()).then(d=>{
+  if (d.logado) window.location.href = "epilogo.html";
+});
+</script>
+</body>
+</html>
