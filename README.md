@@ -1,10 +1,6 @@
 # 📚 E-Commerce de Livros (Epílogo)
 
-<<<<<<< HEAD
 Um projeto de plataforma de comércio eletrônico de livros desenvolvido com **HTML, CSS, JavaScript, PHP e MySQL**, aplicando os padrões de projeto **Strategy**, **Observer**, **State**, **Composite** e **Template Method**.
-=======
-Um projeto de plataforma de comércio eletrônico de livros desenvolvido com **HTML, CSS, JavaScript, PHP e MySQL**, aplicando os padrões de projeto **Strategy**, **Observer**, **State** e **Composite**.
->>>>>>> 5e6deb2bc1a554a6bf98097f95fd377f657d7099
 
 ---
 
@@ -31,13 +27,10 @@ O sistema simula uma livraria virtual completa, gerenciando a navegação do cat
 * **Catálogo (Livro + Kit):** `Livro` (folha) e `KitDeLivros` (composto) implementam a mesma interface `ItemCatalogo`. Um `KitDeLivros` agrupa vários livros e aplica um desconto sobre a soma dos preços, mas para o carrinho/checkout se comporta exatamente como um item único.
 * Persistido no banco pelas tabelas `kits` e `kit_livros`, e resolvido em seus componentes por `api/pedido.php` (baixa de estoque) e `api/cancelar_pedido.php` (devolução de estoque).
 
-<<<<<<< HEAD
 ### 5. 📐 Template Method Pattern (Método Molde)
 * **Processamento de Pagamento:** `EstrategiaPagamento.processar(valor)` define o esqueleto fixo do pagamento — `validar()` → `cobrar()` → `registrar()`. Apenas `cobrar()` é abstrato; `PagamentoCartao`, `PagamentoPix` e `PagamentoBoleto` implementam só esse passo, sem repetir a validação nem o registro do resultado.
 * Convive com o Strategy: o Strategy escolhe *qual* forma de pagamento usar; o Template Method garante que *todas* sigam os mesmos passos.
 
-=======
->>>>>>> 5e6deb2bc1a554a6bf98097f95fd377f657d7099
 ---
 
 ## 🗄️ Correções de modelagem (revisão da professora)
@@ -56,11 +49,7 @@ O sistema simula uma livraria virtual completa, gerenciando a navegação do cat
 | **Front-end** | HTML5, CSS3, JavaScript, PHP |
 | **Back-end / API** | PHP |
 | **Banco de Dados** | MySQL |
-<<<<<<< HEAD
 | **Design Patterns** | Strategy, Observer, State, Composite, Template Method |
-=======
-| **Design Patterns** | Strategy Pattern, Observer Pattern, State Pattern, Composite Pattern |
->>>>>>> 5e6deb2bc1a554a6bf98097f95fd377f657d7099
 
 ---
 
@@ -77,11 +66,7 @@ O sistema simula uma livraria virtual completa, gerenciando a navegação do cat
 │   ├── pedido.php           # Processa os pedidos e regras de negócio (Composite: livro ou kit)
 │   └── sessao.php           # Valida o estado das sessões ativas
 ├── capas/                   # Imagens das capas dos livros do catálogo
-<<<<<<< HEAD
 ├── Diagrama/                # Diagrama de classes (.drawio) atualizado com os 5 padrões
-=======
-├── Diagrama/                # Diagrama de classes (.drawio) atualizado com os 4 padrões
->>>>>>> 5e6deb2bc1a554a6bf98097f95fd377f657d7099
 ├── config.php               # Configuração de conexão com o MySQL
 ├── epilogo_banco.sql        # Script de criação do banco de dados MySQL (livros, kits, pedidos, estados)
 ├── epilogo.html             # Interface principal da aplicação (Livraria)

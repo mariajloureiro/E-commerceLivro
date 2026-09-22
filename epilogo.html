@@ -489,13 +489,29 @@ class ItemPedido {
 }
 
 // ---- Strategy: EstrategiaPagamento -----------------------------------------
+// ---- Template Method: processar() ------------------------------------------
+// processar() é o "método-molde": define o esqueleto FIXO do pagamento
+// (validar -> cobrar -> registrar). Só o passo cobrar() muda de uma forma de
+// pagamento para outra, então cada subclasse implementa apenas ele.
 class EstrategiaPagamento {
-  processar(valor){ throw new Error("processar() deve ser implementado"); }
+  // Template Method — as subclasses NÃO sobrescrevem este método
+  processar(valor){
+    if (!this.validar(valor)) return false;   // passo comum
+    const sucesso = this.cobrar(valor);       // passo que varia (abstrato)
+    this.registrar(valor, sucesso);           // passo comum
+    return sucesso;
+  }
+
+  validar(valor){ return valor > 0; }
+  cobrar(valor){ throw new Error("cobrar() deve ser implementado"); }
+  registrar(valor, sucesso){
+    console.log(`[${this.nome()}] R$ ${valor.toFixed(2)} — ${sucesso ? "aprovado" : "recusado"}.`);
+  }
   nome(){ return "Estratégia"; }
 }
 
 class PagamentoCartao extends EstrategiaPagamento {
-  processar(valor){
+  cobrar(valor){
     console.log(`[Cartão] cobrando R$ ${valor.toFixed(2)} em 1x no crédito.`);
     return true;
   }
@@ -503,7 +519,7 @@ class PagamentoCartao extends EstrategiaPagamento {
 }
 
 class PagamentoPix extends EstrategiaPagamento {
-  processar(valor){
+  cobrar(valor){
     console.log(`[Pix] gerando QR Code para R$ ${valor.toFixed(2)}, confirmação instantânea.`);
     return true;
   }
@@ -511,7 +527,7 @@ class PagamentoPix extends EstrategiaPagamento {
 }
 
 class PagamentoBoleto extends EstrategiaPagamento {
-  processar(valor){
+  cobrar(valor){
     console.log(`[Boleto] emitindo boleto de R$ ${valor.toFixed(2)}, vencimento em 3 dias úteis.`);
     return true;
   }
