@@ -1,6 +1,6 @@
 # 📚 E-Commerce de Livros (Epílogo)
 
-Um projeto de plataforma de comércio eletrônico de livros desenvolvido com **HTML, CSS, JavaScript, PHP e MySQL**, aplicando os padrões de projeto **Strategy**, **Observer**, **State**, **Composite** e **Template Method**.
+Um projeto de plataforma de comércio eletrônico de livros desenvolvido com **HTML, CSS, JavaScript, PHP e MySQL**, aplicando os padrões de projeto **Strategy**, **Observer**, **State**, **Composite**, **Template Method** e **Chain of Responsibility**.
 
 ---
 
@@ -31,6 +31,11 @@ O sistema simula uma livraria virtual completa, gerenciando a navegação do cat
 * **Processamento de Pagamento:** `EstrategiaPagamento.processar(valor)` define o esqueleto fixo do pagamento — `validar()` → `cobrar()` → `registrar()`. Apenas `cobrar()` é abstrato; `PagamentoCartao`, `PagamentoPix` e `PagamentoBoleto` implementam só esse passo, sem repetir a validação nem o registro do resultado.
 * Convive com o Strategy: o Strategy escolhe *qual* forma de pagamento usar; o Template Method garante que *todas* sigam os mesmos passos.
 
+### 6. 🔗 Chain of Responsibility Pattern (Cadeia de Responsabilidade)
+* **Validação de Cadastro (back-end):** `api/ValidadorCadastro.php` encadeia quatro handlers — `ValidarCamposObrigatorios` → `ValidarFormatoEmail` → `ValidarTamanhoSenha` → `ValidarEmailDuplicado`. Cada um checa uma única regra e repassa para o próximo; o primeiro que encontrar um problema interrompe a cadeia e devolve só aquela mensagem. Substituiu um `if` único que misturava três regras numa mensagem genérica.
+* **Validação de Checkout (front-end):** `epilogo.html` encadeia `ValidarEstrategiaEscolhida` → `ValidarCarrinhoNaoVazio` → `ValidarEstoqueSuficiente` dentro de `tentarProcessarPagamento()`. Roda **antes** do Strategy/Template Method (`EstrategiaPagamento.processar()`): só dispara o pagamento se o pedido passar por toda a cadeia sem objeção. A regra de estoque é nova — fecha uma brecha em que o estoque podia cair (em outra aba) depois do item já estar no carrinho.
+* Para adicionar uma nova regra de validação em qualquer um dos dois casos, basta criar mais uma classe e encaixá-la na cadeia — nenhum handler existente precisa ser alterado.
+
 ---
 
 ## 🗄️ Correções de modelagem (revisão da professora)
@@ -49,7 +54,7 @@ O sistema simula uma livraria virtual completa, gerenciando a navegação do cat
 | **Front-end** | HTML5, CSS3, JavaScript, PHP |
 | **Back-end / API** | PHP |
 | **Banco de Dados** | MySQL |
-| **Design Patterns** | Strategy, Observer, State, Composite, Template Method |
+| **Design Patterns** | Strategy, Observer, State, Composite, Template Method, Chain of Responsibility |
 
 ---
 
@@ -64,7 +69,8 @@ O sistema simula uma livraria virtual completa, gerenciando a navegação do cat
 │   ├── login.php            # Realiza a autenticação de usuários
 │   ├── logout.php           # Encerra a sessão do usuário
 │   ├── pedido.php           # Processa os pedidos e regras de negócio (Composite: livro ou kit)
-│   └── sessao.php           # Valida o estado das sessões ativas
+│   ├── sessao.php           # Valida o estado das sessões ativas
+│   └── ValidadorCadastro.php # Cadeia de validação do cadastro (padrão Chain of Responsibility)
 ├── capas/                   # Imagens das capas dos livros do catálogo
 ├── Diagrama/                # Diagrama de classes (.drawio) atualizado com os 5 padrões
 ├── config.php               # Configuração de conexão com o MySQL

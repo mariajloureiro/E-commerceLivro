@@ -568,18 +568,67 @@ class EstadoPedido {
   cancelar(pedido){ throw new Error("cancelar() deve ser implementado"); }
 }
 
+// ---- Chain of Responsibility: RegraDeValidacaoPedido ------------------------
+// Antes desta refatoração, tentarProcessarPagamento() tinha dois `if` soltos
+// (sem estratégia / carrinho vazio) e não conferia se o estoque ainda era
+// suficiente no exato momento do checkout — só na hora de adicionar item ao
+// carrinho, o que deixa uma brecha: dá pra deixar o item no carrinho, o
+// estoque cair em outra aba, e mesmo assim tentar fechar o pedido.
+//
+// Cada regra abaixo cuida de UM motivo de bloqueio. Se não encontra problema,
+// repassa o `pedido` para a próxima regra da cadeia; a primeira que encontrar
+// algo errado interrompe a cadeia e devolve a mensagem — nenhuma regra depois
+// dela chega a rodar. Essa cadeia roda ANTES do Strategy (processar o
+// pagamento) e do Template Method (validar/cobrar/registrar): só chega
+// pagamento pedido que já faz sentido.
+class RegraDeValidacaoPedido {
+  definirProxima(regra){ this.proxima = regra; return regra; } // encadeamento fluente
+  validar(pedido){
+    const erro = this.checar(pedido);
+    if (erro) return erro; // encontrou problema -> cadeia para aqui
+    return this.proxima ? this.proxima.validar(pedido) : null; // repassa adiante
+  }
+  checar(pedido){ throw new Error("checar() deve ser implementado"); }
+}
+
+class ValidarEstrategiaEscolhida extends RegraDeValidacaoPedido {
+  checar(pedido){
+    return pedido.estrategiaPagamento ? null : "Escolha uma estratégia de pagamento antes de finalizar.";
+  }
+}
+
+class ValidarCarrinhoNaoVazio extends RegraDeValidacaoPedido {
+  checar(pedido){
+    return pedido.itens.length > 0 ? null : "O cesto está vazio.";
+  }
+}
+
+class ValidarEstoqueSuficiente extends RegraDeValidacaoPedido {
+  checar(pedido){
+    for (const it of pedido.itens){
+      if (it.quantidade > it.item.getEstoqueDisponivel()){
+        return `Não há mais exemplares suficientes de "${it.item.getTitulo()}" — ajuste o cesto.`;
+      }
+    }
+    return null;
+  }
+}
+
+// monta a cadeia uma única vez: estratégia -> carrinho vazio -> estoque
+const cadeiaValidacaoPedido = new ValidarEstrategiaEscolhida();
+cadeiaValidacaoPedido
+  .definirProxima(new ValidarCarrinhoNaoVazio())
+  .definirProxima(new ValidarEstoqueSuficiente());
+
 // função compartilhada pelos estados que efetivamente tentam pagar (Aberto e Falhou)
 function tentarProcessarPagamento(pedido){
-  if (!pedido.estrategiaPagamento){
-    notificar(`Escolha uma estratégia de pagamento antes de finalizar.`, true);
-    return false;
-  }
-  if (pedido.itens.length === 0){
-    notificar(`O cesto está vazio.`, true);
+  const erro = cadeiaValidacaoPedido.validar(pedido); // Chain of Responsibility
+  if (erro){
+    notificar(erro, true);
     return false;
   }
   const total = pedido.getTotal();
-  const sucesso = pedido.estrategiaPagamento.processar(total); // aciona o Strategy
+  const sucesso = pedido.estrategiaPagamento.processar(total); // aciona o Strategy (+ Template Method)
   pedido.transicionarPara(sucesso ? new EstadoConfirmado() : new EstadoFalhou());
   pedido.notificarObservadores(); // aciona o Observer
   return sucesso;

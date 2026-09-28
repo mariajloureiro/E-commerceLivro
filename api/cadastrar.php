@@ -12,23 +12,23 @@ header('Content-Type: application/json; charset=utf-8');
 
 try {
     require __DIR__ . '/../config.php';
+    require __DIR__ . '/ValidadorCadastro.php';
 
     $body  = json_decode(file_get_contents('php://input'), true) ?? [];
     $nome  = trim($body['nome'] ?? '');
     $email = trim(strtolower($body['email'] ?? ''));
     $senha = $body['senha'] ?? '';
 
-    if (empty($nome) || empty($email) || strlen($senha) < 6) {
-        http_response_code(400);
-        echo json_encode(['sucesso' => false, 'erro' => 'Preencha nome, e-mail e uma senha com pelo menos 6 caracteres.']);
-        exit;
-    }
+    //Chain of Responsibility
+    // Cada regra (campos obrigatórios -> formato do e-mail -> tamanho da
+    // senha -> e-mail duplicado) roda em sequência. a cadeia para no
+    // primeiro handler que encontrar um problema e devolve só essa mensagem
+    $cadeia = montarCadeiaValidacaoCadastro($pdo);
+    $erroValidacao = $cadeia->validar(['nome' => $nome, 'email' => $email, 'senha' => $senha]);
 
-    $stmt = $pdo->prepare("SELECT id FROM clientes WHERE email = ?");
-    $stmt->execute([$email]);
-    if ($stmt->fetch()) {
-        http_response_code(409);
-        echo json_encode(['sucesso' => false, 'erro' => 'Já existe uma conta com esse e-mail.']);
+    if ($erroValidacao !== null) {
+        http_response_code(400);
+        echo json_encode(['sucesso' => false, 'erro' => $erroValidacao]);
         exit;
     }
 

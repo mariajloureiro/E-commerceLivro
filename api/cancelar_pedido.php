@@ -29,14 +29,12 @@ try {
         throw new Exception("Pedido não encontrado.");
     }
 
-    // ---------------------------------------------------------------
     // Padrão State no back-end: o status guardado em `pedidos` é o mesmo
     // dado que, no front, decide qual classe concreta de EstadoPedido está
     // ativa. Aqui replicamos a mesma regra de transição: só um pedido em
     // EstadoAberto ('A') ou EstadoConfirmado ('C') pode ir para
     // EstadoCancelado ('X'). EstadoFalhou ('F') e EstadoCancelado ('X')
     // não permitem cancelar de novo.
-    // ---------------------------------------------------------------
     if (!in_array($pedido['status'], ['A', 'C'], true)) {
         $nomes = ['A' => 'aberto', 'C' => 'confirmado', 'F' => 'falhou', 'X' => 'cancelado'];
         $nomeAtual = $nomes[$pedido['status']] ?? $pedido['status'];
